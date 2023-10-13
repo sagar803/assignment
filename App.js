@@ -1,20 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import contactUsReducer from './store'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SubmittedScreen from './scenes/success';
+import ContactUs from './scenes/ContactUs';
 
-export default function App() {
+const App = () => {
+  const Stack = createNativeStackNavigator();
+  
+  const store = configureStore({
+    reducer: {
+      contactUs: contactUsReducer,
+    },
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="ContactUs">
+          <Stack.Screen name="ContactUs" component={ContactUs} options={{ title: 'Contact Us Form' }} />
+          <Stack.Screen name="Submitted" component={SubmittedScreen} options={{ title: 'Submitted Successfully' }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
